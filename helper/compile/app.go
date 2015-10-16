@@ -59,6 +59,8 @@ func App(opts *AppOptions) (*app.CompileResult, error) {
 		data.Context = make(map[string]interface{})
 		opts.Bindata = data
 	}
+
+	data.Context["app_type"] = ctx.Appfile.Application.Type
 	data.Context["name"] = ctx.Appfile.Application.Name
 	data.Context["dev_fragments"] = ctx.DevDepFragments
 	data.Context["dev_ip_address"] = ctx.DevIPAddress
@@ -83,6 +85,15 @@ func App(opts *AppOptions) (*app.CompileResult, error) {
 		foundationDirsContext["deploy"][i] = filepath.Join(dir, "app-deploy")
 	}
 	data.Context["foundation_dirs"] = foundationDirsContext
+
+	// Setup the shared data
+	if data.SharedExtends == nil {
+		data.SharedExtends = make(map[string]*bindata.Data)
+	}
+	data.SharedExtends["compile"] = &bindata.Data{
+		Asset:    Asset,
+		AssetDir: AssetDir,
+	}
 
 	// Process the customizations!
 	err := processCustomizations(&processOpts{

@@ -27,10 +27,10 @@ echo 'deb https://oss-binaries.phusionpassenger.com/apt/passenger trusty main' |
 oe sudo apt-get update
 
 ol "Downloading Node {{ node_version }}..."
-oe wget -q -O /home/vagrant/node.tar.gz https://nodejs.org/dist/v{{ node_version }}/node-v{{ node_version }}-linux-x64.tar.gz
+oe wget -q -O /tmp/node.tar.gz https://nodejs.org/dist/v{{ node_version }}/node-v{{ node_version }}-linux-x64.tar.gz
 
 ol "Untarring Node..."
-oe sudo tar -C /opt -xzf /home/vagrant/node.tar.gz
+oe sudo tar -C /opt -xzf /tmp/node.tar.gz
 
 ol "Setting up PATH..."
 oe sudo ln -s /opt/node-v{{ node_version }}-linux-x64/bin/node /usr/local/bin/node
@@ -81,6 +81,6 @@ server {
 NGINXCONF
 
 ol "Running npm..."
-sudo -u otto-app -i /bin/bash -lc "cd /srv/otto-app && npm install --production"
+sudo -u otto-app -i /bin/bash -lc "cd /srv/otto-app && npm install && npm prune --production"
 
 ol "...done!"
